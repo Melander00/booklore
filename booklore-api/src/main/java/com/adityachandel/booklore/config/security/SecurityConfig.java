@@ -1,12 +1,9 @@
 package com.adityachandel.booklore.config.security;
 
-import com.adityachandel.booklore.config.AppProperties;
-import com.adityachandel.booklore.config.security.filter.CoverJwtFilter;
-import com.adityachandel.booklore.config.security.filter.DualJwtAuthenticationFilter;
-import com.adityachandel.booklore.config.security.filter.KoboAuthFilter;
-import com.adityachandel.booklore.config.security.filter.KoreaderAuthFilter;
-import com.adityachandel.booklore.config.security.service.OpdsUserDetailsService;
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -26,11 +23,15 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.adityachandel.booklore.config.AppProperties;
+import com.adityachandel.booklore.config.security.filter.CoverJwtFilter;
+import com.adityachandel.booklore.config.security.filter.DualJwtAuthenticationFilter;
+import com.adityachandel.booklore.config.security.filter.KoboAuthFilter;
+import com.adityachandel.booklore.config.security.filter.KoreaderAuthFilter;
+import com.adityachandel.booklore.config.security.service.OpdsUserDetailsService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @EnableMethodSecurity
@@ -148,6 +149,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Todo: add chain that checks api-token
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
