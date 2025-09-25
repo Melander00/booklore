@@ -132,6 +132,12 @@ public class SecurityConfig {
 
     @Bean
     @Order(5)
+    public SecurityFilterChain apiTokensSecurityChain(HttpSecurity http) throws Exception {
+        return http.build();
+    }
+
+    @Bean
+    @Order(6)
     public SecurityFilterChain jwtApiSecurityChain(HttpSecurity http) throws Exception {
         List<String> publicEndpoints = new ArrayList<>(Arrays.asList(COMMON_PUBLIC_ENDPOINTS));
         if (appProperties.getSwagger().isEnabled()) {
