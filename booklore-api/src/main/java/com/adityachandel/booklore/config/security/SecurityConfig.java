@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.adityachandel.booklore.config.AppProperties;
+import com.adityachandel.booklore.config.security.filter.ApiTokenFilter;
 import com.adityachandel.booklore.config.security.filter.CoverJwtFilter;
 import com.adityachandel.booklore.config.security.filter.DualJwtAuthenticationFilter;
 import com.adityachandel.booklore.config.security.filter.KoboAuthFilter;
@@ -40,6 +41,7 @@ public class SecurityConfig {
 
     private final OpdsUserDetailsService opdsUserDetailsService;
     private final DualJwtAuthenticationFilter dualJwtAuthenticationFilter;
+    private final ApiTokenFilter apiTokenFilter;
     private final AppProperties appProperties;
 
     private static final String[] SWAGGER_ENDPOINTS = {
@@ -132,12 +134,6 @@ public class SecurityConfig {
 
     @Bean
     @Order(5)
-    public SecurityFilterChain apiTokensSecurityChain(HttpSecurity http) throws Exception {
-        return http.build();
-    }
-
-    @Bean
-    @Order(6)
     public SecurityFilterChain jwtApiSecurityChain(HttpSecurity http) throws Exception {
         List<String> publicEndpoints = new ArrayList<>(Arrays.asList(COMMON_PUBLIC_ENDPOINTS));
         if (appProperties.getSwagger().isEnabled()) {
@@ -151,11 +147,10 @@ public class SecurityConfig {
                         .requestMatchers(publicEndpoints.toArray(new String[0])).permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(dualJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(apiTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(dualJwtAuthenticationFilter, ApiTokenFilter.class);
         return http.build();
     }
-
-    // Todo: add chain that checks api-token
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
