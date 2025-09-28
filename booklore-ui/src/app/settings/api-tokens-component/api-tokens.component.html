@@ -1,0 +1,117 @@
+<div class="w-full h-[calc(100dvh-10.5rem)] md:h-[calc(100dvh-11.65rem)] overflow-y-auto border rounded-lg enclosing-container">
+
+    <div class="main-container">
+        <div class="settings-header">
+            <h2 class="settings-title">
+                <i class="pi pi-code"></i>
+                Create an API token
+            </h2>
+            <p class="settings-description">
+                Generate API tokens with specific permissions to use without having to log-in using username/password.
+            </p>
+        </div>
+
+    </div>
+
+    <p-divider></p-divider>
+
+    <div class="main-container">
+        <div class="settings-header">
+            <h2 class="settings-title">
+                <i class="pi pi-code"></i>
+                Your API tokens
+            </h2>
+            <p class="settings-description">
+                Manage your existing API tokens.
+            </p>
+        </div>
+
+        <div class="settings-content">
+            <div class="table-card">
+
+                <p-table [value]="apiTokens" [scrollable]="true" scrollHeight="flex">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 30%;">
+                                <div class="header-content">
+                                    <i class="pi pi-tag"></i>
+                                    <span>Token Name</span>
+                                </div>
+                            </th>
+                            <th style="width: 50%;">
+                                <div class="header-content">
+                                    <i class="pi pi-lock"></i>
+                                    <span>Permissions</span>
+                                </div>
+                            </th>
+                            <th style="width: 8%;" class="actions-header">
+                                <div class="header-content">
+                                    <i class="pi pi-pencil"></i>
+                                    <span>Edit</span>
+                                </div>
+                            </th>
+                            <th style="width: 7%;" class="actions-header">
+                                <div class="header-content">
+                                    <i class="pi pi-trash"></i>
+                                    <span>Delete</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-token>
+                        <tr>
+                            <td>
+                                @if (token.isEditing) {
+                                <input type="text" [value]="token.name" class="p-inputtext w-full" size="small" />
+                                } @else {
+                                <span>{{token.name}}</span>
+                                }
+                            </td>
+
+                            <td>todo: perms</td>
+
+                            <td class="actions-cell">
+                                @if (!token.isEditing) {
+                                <p-button icon="pi pi-pencil" severity="info" size="small" [outlined]="true" [rounded]="true" (onClick)="toggleEditToken(token)"
+                                    pTooltip="Edit recipient">
+                                </p-button>
+                                }
+                                @if (token.isEditing) {
+                                <div class="flex gap-1">
+                                    <p-button icon="pi pi-check" severity="success" size="small" [outlined]="true" [rounded]="true" (onClick)="saveToken(token)"
+                                        pTooltip="Save changes">
+                                    </p-button>
+                                    <p-button icon="pi pi-times" severity="danger" size="small" [outlined]="true" [rounded]="true" (onClick)="toggleEditToken(token)"
+                                        pTooltip="Cancel">
+                                    </p-button>
+                                </div>
+                                }
+                            </td>
+
+                            <td class="actions-cell">
+                                <p-button icon="pi pi-trash" severity="danger" size="small" [outlined]="true" [rounded]="true" (onClick)="deleteToken(token)"
+                                    pTooltip="Delete recipient">
+                                </p-button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-message">
+                                    <i class="pi pi-lock"></i>
+                                    <p class="empty-title">No API tokens found</p>
+                                    <p class="empty-subtitle">Your generated API tokens will show here</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+        </div>
+    </div>
+
+</div>

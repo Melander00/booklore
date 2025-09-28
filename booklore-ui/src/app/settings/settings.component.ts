@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { Subscription } from 'rxjs';
 import { AuthenticationSettingsComponent } from '../core/security/oauth2-management/authentication-settings.component';
-import { ApiTokensComponent } from './api-tokens-component/api-tokens-component';
 import { DeviceSettingsComponent } from './device-settings-component/device-settings-component';
 import { EmailComponent } from './email/email.component';
 import { FileNamingPatternComponent } from './file-naming-pattern/file-naming-pattern.component';
@@ -16,6 +15,7 @@ import { ReaderPreferences } from './reader-preferences/reader-preferences.compo
 import { UserManagementComponent } from './user-management/user-management.component';
 import { UserService } from './user-management/user.service';
 import { ViewPreferencesParentComponent } from './view-preferences-parent/view-preferences-parent.component';
+import { ApiTokensComponent } from './api-tokens-component/api-tokens.component';
 
 export enum SettingsTab {
   ReaderSettings = 'reader',
