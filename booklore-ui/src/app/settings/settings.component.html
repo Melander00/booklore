@@ -38,6 +38,9 @@
           <p-tab [value]="SettingsTab.DeviceSettings">
             <i class="pi pi-mobile"></i> Devices
           </p-tab>
+          <p-tab [value]="SettingsTab.ApiTokens">
+            <i class="pi pi-code"></i> API Tokens
+          </p-tab>
         </p-tablist>
         <p-tabpanels>
           <p-tabpanel [value]="SettingsTab.ReaderSettings">
@@ -74,6 +77,9 @@
           </p-tabpanel>
           <p-tabpanel [value]="SettingsTab.DeviceSettings">
             <app-device-settings-component></app-device-settings-component>
+          </p-tabpanel>
+          <p-tabpanel [value]="SettingsTab.ApiTokens">
+            <app-api-tokens-component></app-api-tokens-component>
           </p-tabpanel>
         </p-tabpanels>
       </p-tabs>

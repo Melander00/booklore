@@ -1,20 +1,21 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {Tab, TabList, TabPanel, TabPanels, Tabs} from 'primeng/tabs';
-import {UserService} from './user-management/user.service';
 import { AsyncPipe } from '@angular/common';
-import {EmailComponent} from './email/email.component';
-import {GlobalPreferencesComponent} from './global-preferences/global-preferences.component';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {UserManagementComponent} from './user-management/user-management.component';
-import {AuthenticationSettingsComponent} from '../core/security/oauth2-management/authentication-settings.component';
-import {ViewPreferencesParentComponent} from './view-preferences-parent/view-preferences-parent.component';
-import {ReaderPreferences} from './reader-preferences/reader-preferences.component';
-import {MetadataSettingsComponent} from './metadata-settings-component/metadata-settings-component';
-import {OpdsSettingsComponent} from './opds-settings/opds-settings.component';
-import {DeviceSettingsComponent} from './device-settings-component/device-settings-component';
-import {FileNamingPatternComponent} from './file-naming-pattern/file-naming-pattern.component';
-import {OpdsSettingsV2} from './opds-settings-v2/opds-settings-v2';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { Subscription } from 'rxjs';
+import { AuthenticationSettingsComponent } from '../core/security/oauth2-management/authentication-settings.component';
+import { ApiTokensComponent } from './api-tokens-component/api-tokens-component';
+import { DeviceSettingsComponent } from './device-settings-component/device-settings-component';
+import { EmailComponent } from './email/email.component';
+import { FileNamingPatternComponent } from './file-naming-pattern/file-naming-pattern.component';
+import { GlobalPreferencesComponent } from './global-preferences/global-preferences.component';
+import { MetadataSettingsComponent } from './metadata-settings-component/metadata-settings-component';
+import { OpdsSettingsV2 } from './opds-settings-v2/opds-settings-v2';
+import { OpdsSettingsComponent } from './opds-settings/opds-settings.component';
+import { ReaderPreferences } from './reader-preferences/reader-preferences.component';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { UserService } from './user-management/user.service';
+import { ViewPreferencesParentComponent } from './view-preferences-parent/view-preferences-parent.component';
 
 export enum SettingsTab {
   ReaderSettings = 'reader',
@@ -27,7 +28,8 @@ export enum SettingsTab {
   ApplicationSettings = 'application',
   AuthenticationSettings = 'authentication',
   OpdsV2 = 'opds-v2',
-  Opds = 'opds'
+  Opds = 'opds',
+  ApiTokens = "api-tokens",
 }
 
 @Component({
@@ -49,7 +51,8 @@ export enum SettingsTab {
     OpdsSettingsComponent,
     DeviceSettingsComponent,
     FileNamingPatternComponent,
-    OpdsSettingsV2
+    OpdsSettingsV2,
+    ApiTokensComponent
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
