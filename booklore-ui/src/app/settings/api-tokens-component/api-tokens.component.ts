@@ -3,7 +3,6 @@ import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { Button } from "primeng/button";
-import { Divider } from "primeng/divider";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { SelectModule } from "primeng/select";
 import { TableModule } from "primeng/table";
@@ -16,7 +15,6 @@ import { CreateTokenDialogComponent } from "./create-token-dialog/create-token.c
 @Component({
   selector: "app-api-tokens-component",
   imports: [
-    Divider,
     TableModule,
     Button,
     SelectModule,
