@@ -1,0 +1,34 @@
+<form [formGroup]="tokenForm" (ngSubmit)="createToken();" class="space-y-6 p-6">
+
+    <div class="flex items-center gap-4">
+        <label class="w-40 text-right font-medium">Token Name:</label>
+        <input type="text" pInputText formControlName="name" placeholder="Enter a descriptive name..."
+            class="w-full md:w-80" />
+    </div>
+    @if (tokenForm.get('name')?.invalid && (tokenForm.get('name')?.dirty || tokenForm.get('name')?.touched)) {
+        <small class="text-red-500 pl-44">
+            Name is required.
+        </small>
+    }
+
+    <div>
+        <p class="text-right w-40 font-medium">Permissions:</p>
+        <div class="flex flex-col gap-2 pl-44">
+
+            Todo
+
+        </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <p class="text-right w-40 font-medium">Expiry Date:</p>
+        <select formController="tokenForm.expiryDate" class="w-full md:w-80 p-2 rounded-md cursor-pointer">
+            <option *ngFor="let date of expirationDates" [value]="date.value">{{ date.label }}</option>
+        </select>
+    </div>
+
+    <div class="flex justify-end">
+        <p-button label="Create Token" [disabled]="tokenForm.invalid" type="submit"></p-button>
+    </div>
+
+</form>

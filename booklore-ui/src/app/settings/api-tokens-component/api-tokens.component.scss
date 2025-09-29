@@ -49,7 +49,7 @@
 .settings-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  // gap: 2rem;
 
   @media (max-width: 768px) {
     padding-left: 0;
@@ -64,7 +64,6 @@
 }
 
 .section-header {
-  margin-bottom: 1rem;
   margin-left: 1rem;
   margin-right: 1rem;
 }
@@ -81,6 +80,13 @@
   .pi {
     color: var(--p-primary-color);
   }
+}
+
+.section-title-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .section-description {
@@ -264,7 +270,7 @@
     border-spacing: 0;
   }
 
-  .p-datatable-thead > tr > th {
+  .p-datatable-thead>tr>th {
     background: var(--p-surface-100);
     border-bottom: 2px solid var(--p-content-border-color);
     padding: 1rem;
@@ -273,7 +279,7 @@
     white-space: nowrap;
   }
 
-  .p-datatable-tbody > tr {
+  .p-datatable-tbody>tr {
     transition: background-color 0.2s;
 
     &:hover {
@@ -285,7 +291,7 @@
     }
   }
 
-  .p-datatable-tbody > tr > td {
+  .p-datatable-tbody>tr>td {
     padding: 1rem;
     border: none;
   }
