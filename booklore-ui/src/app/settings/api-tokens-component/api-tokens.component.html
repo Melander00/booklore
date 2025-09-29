@@ -1,32 +1,29 @@
-<div class="w-full h-[calc(100dvh-10.5rem)] md:h-[calc(100dvh-11.65rem)] overflow-y-auto border rounded-lg enclosing-container">
+<div
+    class="w-full h-[calc(100dvh-10.5rem)] md:h-[calc(100dvh-11.65rem)] overflow-y-auto border rounded-lg enclosing-container">
 
     <div class="main-container">
         <div class="settings-header">
             <h2 class="settings-title">
                 <i class="pi pi-code"></i>
-                Create an API token
+                API Tokens Management
             </h2>
             <p class="settings-description">
-                Generate API tokens with specific permissions to use without having to log-in using username/password.
-            </p>
-        </div>
-
-    </div>
-
-    <p-divider></p-divider>
-
-    <div class="main-container">
-        <div class="settings-header">
-            <h2 class="settings-title">
-                <i class="pi pi-code"></i>
-                Your API tokens
-            </h2>
-            <p class="settings-description">
-                Manage your existing API tokens.
+                Manage your API tokens, their names, and permissions.
             </p>
         </div>
 
         <div class="settings-content">
+
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h3 class="section-title">
+                        <i class="pi pi-lock"></i>
+                        Current Tokens
+                    </h3>
+                    <p-button icon="pi pi-plus" label="Create Token" severity="success" size="small" outlined (onClick)="openCreateTokenDialog();" ></p-button>
+                </div>
+            </div>
+
             <div class="table-card">
 
                 <p-table [value]="apiTokens" [scrollable]="true" scrollHeight="flex">
@@ -42,6 +39,12 @@
                                 <div class="header-content">
                                     <i class="pi pi-lock"></i>
                                     <span>Permissions</span>
+                                </div>
+                            </th>
+                            <th style="width: 10%;">
+                                <div class="header-content">
+                                    <i class="pi pi-calendar-times"></i>
+                                    <span>Expiration</span>
                                 </div>
                             </th>
                             <th style="width: 8%;" class="actions-header">
@@ -69,29 +72,52 @@
                                 }
                             </td>
 
-                            <td>todo: perms</td>
+                            <td></td>
+
+                            <td>
+                                @if (token.isEditing) {
+                                    <!-- <p-select
+                                        [options]="expirationDates"
+                                        [(ngModel)]="selectedExpirationDate"
+                                        class="w-full h-full p-2 rounded-md cursor-pointer"
+                                    /> -->
+                                    <select [(ngModel)]="selectedExpirationDate" class="w-full h-full p-2 rounded-md cursor-pointer">
+                                        <option *ngFor="let date of expirationDates" [value]="date.value">{{ date.label }}</option>
+                                    </select>
+                                    <!-- <select class="w-full h-full p-2 rounded-md cursor-pointer">
+                                        <option>10 Days</option>
+                                        <option>20 Days</option>
+                                        <option>1 Month</option>
+                                        <option>3 Months</option>
+                                        <option>6 Months</option>
+                                        <option>1 Year</option>
+                                    </select> -->
+                                } @else {
+                                    <span>{{token.expiryDate.toDateString()}}</span>
+                                }
+                            </td>
 
                             <td class="actions-cell">
                                 @if (!token.isEditing) {
-                                <p-button icon="pi pi-pencil" severity="info" size="small" [outlined]="true" [rounded]="true" (onClick)="toggleEditToken(token)"
-                                    pTooltip="Edit recipient">
+                                <p-button icon="pi pi-pencil" severity="info" size="small" [outlined]="true"
+                                    [rounded]="true" (onClick)="toggleEditToken(token)" pTooltip="Edit recipient">
                                 </p-button>
                                 }
                                 @if (token.isEditing) {
                                 <div class="flex gap-1">
-                                    <p-button icon="pi pi-check" severity="success" size="small" [outlined]="true" [rounded]="true" (onClick)="saveToken(token)"
-                                        pTooltip="Save changes">
+                                    <p-button icon="pi pi-check" severity="success" size="small" [outlined]="true"
+                                        [rounded]="true" (onClick)="saveToken(token)" pTooltip="Save changes">
                                     </p-button>
-                                    <p-button icon="pi pi-times" severity="danger" size="small" [outlined]="true" [rounded]="true" (onClick)="toggleEditToken(token)"
-                                        pTooltip="Cancel">
+                                    <p-button icon="pi pi-times" severity="danger" size="small" [outlined]="true"
+                                        [rounded]="true" (onClick)="toggleEditToken(token)" pTooltip="Cancel">
                                     </p-button>
                                 </div>
                                 }
                             </td>
 
                             <td class="actions-cell">
-                                <p-button icon="pi pi-trash" severity="danger" size="small" [outlined]="true" [rounded]="true" (onClick)="deleteToken(token)"
-                                    pTooltip="Delete recipient">
+                                <p-button icon="pi pi-trash" severity="danger" size="small" [outlined]="true"
+                                    [rounded]="true" (onClick)="deleteToken(token)" pTooltip="Delete recipient">
                                 </p-button>
                             </td>
                         </tr>

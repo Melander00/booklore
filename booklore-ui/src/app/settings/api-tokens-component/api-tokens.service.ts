@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { API_CONFIG } from "../../config/api-config";
-import { ApiToken } from "./api-tokens.model";
+import { ApiToken, ApiTokenCreationDTO, ApiTokenUpdateDTO } from "./api-tokens.model";
 
 
 
@@ -18,15 +18,15 @@ export class ApiTokensService {
         return this.http.get<ApiToken[]>(`${this.baseUrl}/get`);
     }
 
-    generateToken(): Observable<ApiToken> {
-        return this.http.post<ApiToken>(`${this.baseUrl}/generate`, {}); // todo: permissions
+    generateToken(token: ApiTokenCreationDTO): Observable<ApiToken> {
+        return this.http.post<ApiToken>(`${this.baseUrl}/generate`, {token}); // todo: permissions
     }
 
     regenerateToken(tokenId: number): Observable<ApiToken> {
         return this.http.put<ApiToken>(`${this.baseUrl}/regenerate`, {tokenId});
     }
 
-    updateToken(token: ApiToken): Observable<ApiToken> {
+    updateToken(token: ApiTokenUpdateDTO): Observable<ApiToken> {
         return this.http.put<ApiToken>(`${this.baseUrl}/update`, {token}); // todo: permissions
     } 
 
