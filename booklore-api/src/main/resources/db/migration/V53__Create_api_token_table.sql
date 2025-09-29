@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS api_tokens (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
+    name VARCHAR(100) NOT NULL,
     token VARCHAR(255) NOT NULL UNIQUE,
     permissions VARCHAR(255),
     expires_at TIMESTAMP,
