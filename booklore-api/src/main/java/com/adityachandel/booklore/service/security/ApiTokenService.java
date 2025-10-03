@@ -1,16 +1,20 @@
 package com.adityachandel.booklore.service.security;
 
+import java.security.SecureRandom;
+import java.time.Instant;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.adityachandel.booklore.model.dto.request.CreateApiTokenRequest;
+import com.adityachandel.booklore.model.dto.request.UpdateApiTokenRequest;
 import com.adityachandel.booklore.model.entity.ApiTokenEntity;
 import com.adityachandel.booklore.model.entity.BookLoreUserEntity;
 import com.adityachandel.booklore.repository.ApiTokenRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -74,6 +78,20 @@ public class ApiTokenService {
                 })
                 .orElse(false);
     }
+
+
+
+    // Used by security config
+    public boolean exists(String token) {
+        return tokenRepository.existsByToken(token);
+    }
+
+    public BookLoreUserEntity userFromToken(String token) {
+        return tokenRepository.findUserByToken(token);
+    }
+
+
+
 
     private String generateSecureToken() {
         byte[] bytes = new byte[32];

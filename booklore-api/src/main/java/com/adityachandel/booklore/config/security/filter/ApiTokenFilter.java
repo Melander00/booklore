@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,7 +16,7 @@ import com.adityachandel.booklore.mapper.custom.BookLoreUserTransformer;
 import com.adityachandel.booklore.model.dto.BookLoreUser;
 import com.adityachandel.booklore.model.entity.BookLoreUserEntity;
 import com.adityachandel.booklore.model.entity.UserPermissionsEntity;
-import com.adityachandel.booklore.repository.UserRepository;
+import com.adityachandel.booklore.service.security.ApiTokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,8 +28,7 @@ import lombok.AllArgsConstructor;
 @Component
 public class ApiTokenFilter extends OncePerRequestFilter {
     
-    // private final ApiTokenService tokenService;
-    private final UserRepository userRepository;
+    private final ApiTokenService tokenService;
     private final BookLoreUserTransformer bookLoreUserTransformer;
 
     @Override
@@ -43,8 +41,8 @@ public class ApiTokenFilter extends OncePerRequestFilter {
         String token = getTokenFromRequest(request);
 
         if(token != null && validateToken(token)) {
-            Long userId = getUserIdFromToken(token);
-            BookLoreUserEntity bookLoreUserEntity = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            BookLoreUserEntity bookLoreUserEntity = getUserFromToken(token);
+            // BookLoreUserEntity bookLoreUserEntity = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
             BookLoreUser bookLoreUser = bookLoreUserTransformer.toDTO(bookLoreUserEntity);
             List<GrantedAuthority> authorities = getAuthorities(bookLoreUserEntity.getPermissions());
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(bookLoreUser, null, authorities);
@@ -56,18 +54,19 @@ public class ApiTokenFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        String header = request.getHeader("X-API-TOKEN");
-        return header;
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        return null;
     }
 
     private boolean validateToken(String apiToken) {
-        // return tokenService.exists(apiToken);
-        return false;
+        return tokenService.exists(apiToken);
     }
 
-    private Long getUserIdFromToken(String apiToken) {
-        // return tokenService.userIdFromToken(apiToken);
-        return 1L;
+    private BookLoreUserEntity getUserFromToken(String apiToken) {
+        return tokenService.userFromToken(apiToken);
     }
 
     private List<GrantedAuthority> getAuthorities(UserPermissionsEntity permissions) {
