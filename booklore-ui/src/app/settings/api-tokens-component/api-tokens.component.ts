@@ -14,13 +14,7 @@ import { CreateTokenDialogComponent } from "./create-token-dialog/create-token.c
 
 @Component({
   selector: "app-api-tokens-component",
-  imports: [
-    TableModule,
-    Button,
-    SelectModule,
-    FormsModule,
-    CommonModule
-  ],
+  imports: [TableModule, Button, SelectModule, FormsModule, CommonModule],
   templateUrl: "./api-tokens.component.html",
   styleUrl: "./api-tokens.component.scss",
 })
@@ -37,18 +31,18 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
   apiTokens: ApiToken[] = [];
 
   expirationDates: {
-    label: string,
-    value: number
+    label: string;
+    value: number;
   }[] = [
-      { label: "7 Days", value: 7 },
-      { label: "14 Days", value: 14 },
-      { label: "30 Days", value: 30 },
-      { label: "90 Days", value: 90 },
-      { label: "180 Days", value: 180 },
-      { label: "365 Days", value: 365 },
-  ]
+    { label: "7 Days", value: 7 },
+    { label: "14 Days", value: 14 },
+    { label: "30 Days", value: 30 },
+    { label: "90 Days", value: 90 },
+    { label: "180 Days", value: 180 },
+    { label: "365 Days", value: 365 },
+  ];
 
-  selectedExpirationDate = this.expirationDates[0].value
+  selectedExpirationDate = this.expirationDates[0].value;
 
   ngOnInit() {
     this.loadTokens();
@@ -60,7 +54,11 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
 
     this.apiTokensService.getTokens().subscribe({
       next: (tokens) => {
-        this.apiTokens = tokens;
+        this.apiTokens = tokens.map((e) => ({
+          ...e,
+          createdAt: new Date(e.createdAt),
+          expiresAt: new Date(e.expiresAt),
+        }));
       },
       error: (err) => {
         if (err.status !== 404) {
@@ -82,16 +80,16 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
     const dto: ApiTokenUpdateDTO = {
       name: token.name,
       expiresInDays: this.selectedExpirationDate,
-      permissions: null
-    }
+      permissions: null,
+    };
     this.apiTokensService.updateToken(token.id, dto).subscribe({
       next: () => {
         token.isEditing = false;
         this.messageService.add({
           severity: "success",
           summary: "Success",
-          detail: "Token updated successfully."
-        })
+          detail: "Token updated successfully.",
+        });
         this.loadTokens();
       },
       error: () => {
@@ -103,21 +101,38 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
         });
         // }
       },
-    })
+    });
   }
 
   deleteToken(token: ApiToken) {
     if (confirm(`Are you sure you want to delete the token "${token.name}"?`)) {
-      this.apiTokensService.deleteToken(token) // todo: finish
+      this.apiTokensService.deleteToken(token).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Token revoked successfully.",
+          });
+        },
+        error: () => {
+          // if (err.status !== 404) {
+          this.messageService.add({
+            severity: "error",
+            summary: "Delete Error",
+            detail: "Unable to revoke API token. Please try again.",
+          });
+          // }
+        },
+      }); // todo: finish
     }
   }
 
   openCreateTokenDialog(): void {
     this.ref = this.dialogService.open(CreateTokenDialogComponent, {
-      header: 'Create new API token',
+      header: "Create new API token",
       modal: true,
       closable: true,
-      style: { position: 'absolute', top: '15%' },
+      style: { position: "absolute", top: "15%" },
     });
     this.ref.onClose.subscribe((result) => {
       if (result) {

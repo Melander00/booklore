@@ -27,10 +27,10 @@ export class ApiTokensService {
     }
 
     updateToken(tokenId: number, token: ApiTokenUpdateDTO): Observable<ApiToken> {
-        return this.http.put<ApiToken>(`${this.baseUrl}/${tokenId}/update`, token); // todo: permissions
+        return this.http.put<ApiToken>(`${this.baseUrl}/${tokenId}`, token); // todo: permissions
     } 
 
-    deleteToken(token: ApiToken): void {
-        this.http.delete(`${this.baseUrl}/${token.id}`)
+    deleteToken(token: ApiToken) {
+        return this.http.delete(`${this.baseUrl}/${token.id}`)
     }
 }
