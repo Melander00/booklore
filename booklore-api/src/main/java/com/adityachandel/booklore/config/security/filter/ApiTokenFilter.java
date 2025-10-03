@@ -16,7 +16,7 @@ import com.adityachandel.booklore.mapper.custom.BookLoreUserTransformer;
 import com.adityachandel.booklore.model.dto.BookLoreUser;
 import com.adityachandel.booklore.model.entity.BookLoreUserEntity;
 import com.adityachandel.booklore.model.entity.UserPermissionsEntity;
-import com.adityachandel.booklore.service.security.ApiTokenService;
+import com.adityachandel.booklore.repository.ApiTokenRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,7 +28,7 @@ import lombok.AllArgsConstructor;
 @Component
 public class ApiTokenFilter extends OncePerRequestFilter {
     
-    private final ApiTokenService tokenService;
+    private final ApiTokenRepository tokenRepository;
     private final BookLoreUserTransformer bookLoreUserTransformer;
 
     @Override
@@ -62,11 +62,11 @@ public class ApiTokenFilter extends OncePerRequestFilter {
     }
 
     private boolean validateToken(String apiToken) {
-        return tokenService.exists(apiToken);
+        return tokenRepository.existsByToken(apiToken);
     }
 
     private BookLoreUserEntity getUserFromToken(String apiToken) {
-        return tokenService.userFromToken(apiToken);
+        return tokenRepository.findUserByToken(apiToken);
     }
 
     private List<GrantedAuthority> getAuthorities(UserPermissionsEntity permissions) {

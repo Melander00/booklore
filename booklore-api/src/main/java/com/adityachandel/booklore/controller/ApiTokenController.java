@@ -1,11 +1,9 @@
 package com.adityachandel.booklore.controller;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +17,6 @@ import com.adityachandel.booklore.model.dto.request.CreateApiTokenRequest;
 import com.adityachandel.booklore.model.dto.request.UpdateApiTokenRequest;
 import com.adityachandel.booklore.model.dto.response.ApiTokenResponse;
 import com.adityachandel.booklore.model.entity.ApiTokenEntity;
-import com.adityachandel.booklore.model.entity.BookLoreUserEntity;
 import com.adityachandel.booklore.service.security.ApiTokenService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,28 +30,16 @@ public class ApiTokenController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiTokenResponse> createToken(
-            @AuthenticationPrincipal BookLoreUserEntity currentUser,
             @RequestBody CreateApiTokenRequest request
     ) {
-        Instant expiresAt = request.getExpiresInDays() != null
-                ? Instant.now().plusSeconds(request.getExpiresInDays() * 24 * 60 * 60)
-                : null;
-
-        ApiTokenEntity token = tokenService.createToken(
-                currentUser,
-                request.getName(),
-                request.getPermissions(),
-                expiresAt
-        );
+        ApiTokenEntity token = tokenService.createToken(request);
 
         return ResponseEntity.ok(toResponse(token, true));
     }
 
     @GetMapping("/my-tokens")
-    public ResponseEntity<List<ApiTokenResponse>> getMyTokens(
-            @AuthenticationPrincipal BookLoreUserEntity currentUser
-    ) {
-        List<ApiTokenResponse> tokens = tokenService.getUserTokens(currentUser)
+    public ResponseEntity<List<ApiTokenResponse>> getMyTokens() {
+        List<ApiTokenResponse> tokens = tokenService.getUserTokens()
                 .stream()
                 .map(token -> toResponse(token, false))
                 .collect(Collectors.toList());
@@ -63,40 +48,42 @@ public class ApiTokenController {
 
     @PostMapping("/{id}/regenerate")
     public ResponseEntity<ApiTokenResponse> regenerateToken(
-            @AuthenticationPrincipal BookLoreUserEntity currentUser,
             @PathVariable Long id
     ) {
-        return tokenService.regenerateToken(id, currentUser)
-                .map(token -> ResponseEntity.ok(toResponse(token, true)))
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(toResponse(tokenService.regenerateToken(id), true));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiTokenResponse> updateToken(
-            @AuthenticationPrincipal BookLoreUserEntity currentUser,
             @PathVariable Long id,
             @RequestBody UpdateApiTokenRequest request
     ) {
-        Instant newExpiry = request.getExpiresInDays() != null
-                ? Instant.now().plusSeconds(request.getExpiresInDays() * 24 * 60 * 60)
-                : null;
-
-        return tokenService.updateToken(id, currentUser, request.getName(), request.getPermissions(), newExpiry)
-                .map(token -> ResponseEntity.ok(toResponse(token, false)))
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(toResponse(tokenService.updateToken(id, request), false));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteToken(
-            @AuthenticationPrincipal BookLoreUserEntity currentUser,
             @PathVariable Long id
     ) {
-        boolean success = tokenService.revokeToken(id, currentUser);
+        boolean success = tokenService.revokeToken(id);
         return success ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
     private ApiTokenResponse toResponse(ApiTokenEntity token, boolean includeSecret) {
-        return ApiTokenResponse.builder().id(token.getId()).build();
+        ApiTokenResponse.ApiTokenResponseBuilder builder = ApiTokenResponse.builder()
+            .id(token.getId())
+            .name(token.getName())
+            .permissions(null)
+            .expiresAt(token.getExpiresAt())
+            .createdAt(token.getCreatedAt())
+            .revoked(token.isRevoked());
+
+        if(includeSecret) {
+            builder.token(token.getToken());
+        }
+
+        return builder.build();
+
         // return new ApiTokenResponse(
         //         token.getId(),
         //         token.getName(),

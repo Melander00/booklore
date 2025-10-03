@@ -10,9 +10,6 @@ public class CreateApiTokenRequest {
 
     @Data
     public static class Permissions {
-        private boolean canRead;
-        private boolean canWrite;
-        private boolean canDelete;
         // future: add more fine-grained flags as needed
     }
 }

@@ -12,8 +12,6 @@ public class UpdateApiTokenRequest {
 
     @Data
     public static class Permissions {
-        private boolean canRead;
-        private boolean canWrite;
-        private boolean canDelete;
+        
     }
 }

@@ -45,7 +45,7 @@ public class ApiTokenEntity {
     @Column(name = "permissions", columnDefinition = "json")
     private String permissions;
 
-
+    @Column(name = "expires_at")
     private Instant expiresAt;
 
     @Builder.Default
