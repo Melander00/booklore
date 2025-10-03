@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS api_tokens (
     user_id BIGINT NOT NULL,
     name VARCHAR(100) NOT NULL,
     token VARCHAR(255) NOT NULL UNIQUE,
-    permissions VARCHAR(255),
+    permissions JSON,
     expires_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     revoked BOOLEAN DEFAULT FALSE,
