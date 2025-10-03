@@ -1,6 +1,7 @@
 package com.adityachandel.booklore.config.security.filter;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.adityachandel.booklore.config.security.userdetails.UserAuthenticationDetails;
+import com.adityachandel.booklore.exception.ApiError;
 import com.adityachandel.booklore.mapper.custom.BookLoreUserTransformer;
 import com.adityachandel.booklore.model.dto.BookLoreUser;
+import com.adityachandel.booklore.model.entity.ApiTokenEntity;
 import com.adityachandel.booklore.model.entity.BookLoreUserEntity;
 import com.adityachandel.booklore.model.entity.UserPermissionsEntity;
 import com.adityachandel.booklore.repository.ApiTokenRepository;
@@ -62,7 +65,18 @@ public class ApiTokenFilter extends OncePerRequestFilter {
     }
 
     private boolean validateToken(String apiToken) {
-        return tokenRepository.existsByToken(apiToken);
+        // if token doesnt exist
+        if(!tokenRepository.existsByToken(apiToken)) return false;
+
+        ApiTokenEntity token = tokenRepository.findByToken(apiToken);
+
+        // if token is revoked/deleted
+        if(token.isRevoked()) throw ApiError.API_TOKEN_REVOKED.createException();
+
+        // if token has expired
+        if(token.getExpiresAt().isBefore(Instant.now())) throw ApiError.API_TOKEN_EXPIRED.createException();
+
+        return true;
     }
 
     private BookLoreUserEntity getUserFromToken(String apiToken) {
