@@ -24,6 +24,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Table(name = "api_tokens")
 public class ApiTokenEntity {
 
@@ -41,8 +42,9 @@ public class ApiTokenEntity {
     @Column(nullable = false, unique = true, length = 255)
     private String token; 
 
-    @Column(length = 255)
-    private String permissions; 
+    @Column(name = "permissions", columnDefinition = "json")
+    private String permissions;
+
 
     private Instant expiresAt;
 
