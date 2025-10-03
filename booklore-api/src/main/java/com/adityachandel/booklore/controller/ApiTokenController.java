@@ -1,19 +1,28 @@
 package com.adityachandel.booklore.controller;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.adityachandel.booklore.model.dto.request.CreateApiTokenRequest;
 import com.adityachandel.booklore.model.dto.request.UpdateApiTokenRequest;
 import com.adityachandel.booklore.model.dto.response.ApiTokenResponse;
 import com.adityachandel.booklore.model.entity.ApiTokenEntity;
 import com.adityachandel.booklore.model.entity.BookLoreUserEntity;
 import com.adityachandel.booklore.service.security.ApiTokenService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/api-token")
@@ -87,14 +96,15 @@ public class ApiTokenController {
     }
 
     private ApiTokenResponse toResponse(ApiTokenEntity token, boolean includeSecret) {
-        return new ApiTokenResponse(
-                token.getId(),
-                token.getName(),
-                token.getPermissions(),
-                token.getExpiresAt(),
-                token.getCreatedAt(),
-                token.isRevoked(),
-                includeSecret ? token.getToken() : null
-        );
+        return ApiTokenResponse.builder().id(token.getId()).build();
+        // return new ApiTokenResponse(
+        //         token.getId(),
+        //         token.getName(),
+        //         token.getPermissions(),
+        //         token.getExpiresAt(),
+        //         token.getCreatedAt(),
+        //         token.isRevoked(),
+        //         includeSecret ? token.getToken() : null
+        // );
     }
 }

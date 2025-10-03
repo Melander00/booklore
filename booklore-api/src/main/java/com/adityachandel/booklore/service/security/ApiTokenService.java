@@ -29,7 +29,7 @@ public class ApiTokenService {
             .user(user)
             .name(name)
             .token(tokenValue)
-            .permissions(permissions) // now an object, not a string
+            .permissions(permissions.toString()) // todo: to json
             .expiresAt(expiresAt)
             .revoked(false)
             .createdAt(Instant.now())
@@ -62,7 +62,7 @@ public class ApiTokenService {
             .filter(token -> token.getUser().getId().equals(user.getId()))
             .map(token -> {
                 if (newName != null) token.setName(newName);
-                if (newPermissions != null) token.setPermissions(newPermissions);
+                if (newPermissions != null) token.setPermissions(newPermissions.toString()); // todo: to json
                 if (newExpiry != null) token.setExpiresAt(newExpiry);
                 return tokenRepository.save(token);
             });

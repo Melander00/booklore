@@ -1,12 +1,16 @@
 package com.adityachandel.booklore.model.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.time.Instant;
+
+import com.adityachandel.booklore.model.dto.request.CreateApiTokenRequest;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class ApiTokenResponse {
     private Long id;
     private String name;
