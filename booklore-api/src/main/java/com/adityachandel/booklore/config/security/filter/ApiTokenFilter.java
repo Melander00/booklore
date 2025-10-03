@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.adityachandel.booklore.config.security.userdetails.UserAuthenticationDetails;
-import com.adityachandel.booklore.exception.ApiError;
 import com.adityachandel.booklore.mapper.custom.BookLoreUserTransformer;
 import com.adityachandel.booklore.model.dto.BookLoreUser;
 import com.adityachandel.booklore.model.entity.ApiTokenEntity;
@@ -45,7 +44,6 @@ public class ApiTokenFilter extends OncePerRequestFilter {
 
         if(token != null && validateToken(token)) {
             BookLoreUserEntity bookLoreUserEntity = getUserFromToken(token);
-            // BookLoreUserEntity bookLoreUserEntity = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
             BookLoreUser bookLoreUser = bookLoreUserTransformer.toDTO(bookLoreUserEntity);
             List<GrantedAuthority> authorities = getAuthorities(bookLoreUserEntity.getPermissions());
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(bookLoreUser, null, authorities);
@@ -57,25 +55,21 @@ public class ApiTokenFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
-        }
-        return null;
+        String header = request.getHeader("X-API-TOKEN");
+        return header;
     }
 
     private boolean validateToken(String apiToken) {
         // if token doesnt exist
         if(!tokenRepository.existsByToken(apiToken)) return false;
-
         ApiTokenEntity token = tokenRepository.findByToken(apiToken);
 
         // if token is revoked/deleted
-        if(token.isRevoked()) throw ApiError.API_TOKEN_REVOKED.createException();
+        if(token.isRevoked()) return false;
 
         // if token has expired
-        if(token.getExpiresAt().isBefore(Instant.now())) throw ApiError.API_TOKEN_EXPIRED.createException();
-
+        if(token.getExpiresAt().isBefore(Instant.now())) return false;
+        
         return true;
     }
 
