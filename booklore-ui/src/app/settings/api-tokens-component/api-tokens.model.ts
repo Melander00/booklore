@@ -1,19 +1,21 @@
 export interface ApiToken {
+    id: number,
     name: string,
-    tokenId: number,
-    creationDate: Date,
-    expiryDate: Date,
-    // permissions: any[],
+    permissions: null,
+    expiresAt: Date,
+    createdAt: Date,
+    revoked: boolean,
     isEditing: boolean,
 }
 
 export interface ApiTokenCreationDTO {
     name: string,
     expiresInDays: number,
+    permissions: null
 }
 
 export interface ApiTokenUpdateDTO {
     name: string,
     expiresInDays: number,
-    tokenId: number,
+    permissions: null
 }

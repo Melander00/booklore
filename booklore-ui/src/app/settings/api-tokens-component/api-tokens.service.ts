@@ -15,22 +15,22 @@ export class ApiTokensService {
     private readonly http = inject(HttpClient);
 
     getTokens(): Observable<ApiToken[]> {
-        return this.http.get<ApiToken[]>(`${this.baseUrl}/get`);
+        return this.http.get<ApiToken[]>(`${this.baseUrl}/my-tokens`);
     }
 
     generateToken(token: ApiTokenCreationDTO): Observable<ApiToken> {
-        return this.http.post<ApiToken>(`${this.baseUrl}/generate`, {token}); // todo: permissions
+        return this.http.post<ApiToken>(`${this.baseUrl}/create`, token); // todo: permissions
     }
 
     regenerateToken(tokenId: number): Observable<ApiToken> {
-        return this.http.put<ApiToken>(`${this.baseUrl}/regenerate`, {tokenId});
+        return this.http.post<ApiToken>(`${this.baseUrl}/${tokenId}/regenerate`, null);
     }
 
-    updateToken(token: ApiTokenUpdateDTO): Observable<ApiToken> {
-        return this.http.put<ApiToken>(`${this.baseUrl}/update`, {token}); // todo: permissions
+    updateToken(tokenId: number, token: ApiTokenUpdateDTO): Observable<ApiToken> {
+        return this.http.put<ApiToken>(`${this.baseUrl}/${tokenId}/update`, token); // todo: permissions
     } 
 
     deleteToken(token: ApiToken): void {
-        this.http.delete(`${this.baseUrl}/${token.tokenId}`)
+        this.http.delete(`${this.baseUrl}/${token.id}`)
     }
 }

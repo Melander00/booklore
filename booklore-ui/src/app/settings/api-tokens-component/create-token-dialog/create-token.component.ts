@@ -63,7 +63,7 @@ export class CreateTokenDialogComponent implements OnInit {
             return;
         }
 
-        const tokenData: ApiTokenCreationDTO = {...this.tokenForm.value}
+        const tokenData: ApiTokenCreationDTO = {...this.tokenForm.value, permissions: null}
 
         this.tokenService.generateToken(tokenData).subscribe({
             next: () => {

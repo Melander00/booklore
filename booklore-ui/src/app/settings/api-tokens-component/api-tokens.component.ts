@@ -82,9 +82,9 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
     const dto: ApiTokenUpdateDTO = {
       name: token.name,
       expiresInDays: this.selectedExpirationDate,
-      tokenId: token.tokenId,
+      permissions: null
     }
-    this.apiTokensService.updateToken(dto).subscribe({
+    this.apiTokensService.updateToken(token.id, dto).subscribe({
       next: () => {
         token.isEditing = false;
         this.messageService.add({
@@ -94,7 +94,7 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
         })
         this.loadTokens();
       },
-      error: (err) => {
+      error: () => {
         // if (err.status !== 404) {
         this.messageService.add({
           severity: "error",
