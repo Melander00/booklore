@@ -3,11 +3,14 @@ package com.adityachandel.booklore.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.adityachandel.booklore.model.entity.ApiTokenEntity;
 import com.adityachandel.booklore.model.entity.BookLoreUserEntity;
+
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface ApiTokenRepository extends JpaRepository<ApiTokenEntity, Long> {
@@ -20,4 +23,9 @@ public interface ApiTokenRepository extends JpaRepository<ApiTokenEntity, Long> 
 
     @Query("SELECT t.user FROM ApiTokenEntity t WHERE t.token = :token")
     BookLoreUserEntity findUserByToken(String token);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM ApiTokenEntity t WHERE t.id = :id AND t.user = :user")
+    void deleteByIdAndUser(Long id, BookLoreUserEntity user);
 }

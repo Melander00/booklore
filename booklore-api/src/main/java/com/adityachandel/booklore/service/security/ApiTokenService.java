@@ -108,6 +108,14 @@ public class ApiTokenService {
         return true;
     }
 
+    public boolean deleteToken(Long tokenId) {
+        BookLoreUserEntity userEntity = getUser();
+
+        tokenRepository.deleteByIdAndUser(tokenId, userEntity);
+
+        return true;
+    }
+
     // public ApiTokenEntity createToken(BookLoreUserEntity user, String name,
     //                               CreateApiTokenRequest.Permissions permissions, Instant expiresAt) {
     // String tokenValue = generateSecureToken();
