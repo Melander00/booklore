@@ -6,6 +6,7 @@ export interface ApiToken {
     createdAt: Date,
     revoked: boolean,
     isEditing: boolean,
+    token?: string;
 }
 
 export interface ApiTokenCreationDTO {

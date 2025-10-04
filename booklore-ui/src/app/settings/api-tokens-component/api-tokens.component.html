@@ -71,29 +71,33 @@
                                 <span>{{token.name}}</span>
                                 }
                             </td>
-
+                            
                             <td></td>
 
                             <td>
                                 @if (token.isEditing) {
-                                    <!-- <p-select
-                                        [options]="expirationDates"
-                                        [(ngModel)]="selectedExpirationDate"
-                                        class="w-full h-full p-2 rounded-md cursor-pointer"
-                                    /> -->
-                                    <select [(ngModel)]="selectedExpirationDate" class="w-full h-full p-2 rounded-md cursor-pointer">
-                                        <option *ngFor="let date of expirationDates" [value]="date.value">{{ date.label }}</option>
-                                    </select>
-                                    <!-- <select class="w-full h-full p-2 rounded-md cursor-pointer">
-                                        <option>10 Days</option>
-                                        <option>20 Days</option>
-                                        <option>1 Month</option>
-                                        <option>3 Months</option>
-                                        <option>6 Months</option>
-                                        <option>1 Year</option>
-                                    </select> -->
+                                    <div class="flex items-center gap-3">
+                                        <select [(ngModel)]="selectedExpirationDate" class="w-full h-full p-2 rounded-md cursor-pointer">
+                                            <option *ngFor="let date of expirationDates" [value]="date.value">{{ date.label }}</option>
+                                        </select>
+                                        <!-- Disabled regenerate icon while editing -->
+                                        <i
+                                            class="pi pi-refresh cursor-not-allowed text-blue-600 opacity-50"
+                                            pTooltip="Cannot regenerate while editing"
+                                            tooltipPosition="top"
+                                        ></i>
+                                    </div>
                                 } @else {
-                                    <span>{{token.expiresAt.toDateString()}}</span>
+                                    <div class="flex items-center gap-3">
+                                        <!-- Regenerate icon active -->
+                                        <i
+                                            class="pi pi-refresh cursor-pointer text-blue-600"
+                                            pTooltip="Regenerate token"
+                                            tooltipPosition="top"
+                                            (click)="regenerateToken(token)"
+                                        ></i>
+                                        <span>{{ token.expiresAt.toDateString() }}</span>
+                                    </div>
                                 }
                             </td>
 

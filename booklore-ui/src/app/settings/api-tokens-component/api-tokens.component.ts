@@ -11,6 +11,7 @@ import { UserService } from "../user-management/user.service";
 import { ApiToken, ApiTokenUpdateDTO } from "./api-tokens.model";
 import { ApiTokensService } from "./api-tokens.service";
 import { CreateTokenDialogComponent } from "./create-token-dialog/create-token.component";
+import { ShowTokenDialogComponent } from './show-token-dialog/show-token-dialog.component';
 
 @Component({
   selector: "app-api-tokens-component",
@@ -103,6 +104,41 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  regenerateToken(token: ApiToken) {
+    if (!confirm(`Are you sure you want to regenerate the token "${token.name}"? This will create a new token.`)) {
+        return;
+    }
+
+    this.apiTokensService.regenerateToken(token.id).subscribe({
+        next: (newToken: ApiToken) => {
+            // Update the table
+            this.loadTokens();
+
+            // Open the Show Token dialog with the new token
+            this.dialogService.open(ShowTokenDialogComponent, {
+                header: "Your New API Token",
+                modal: true,
+                closable: true,
+                style: { position: "absolute", top: "15%" },
+                data: { tokenValue: newToken.token },
+            });
+
+            this.messageService.add({
+                severity: "success",
+                summary: "Token Regenerated",
+                detail: `Token "${token.name}" has been successfully regenerated.`,
+            });
+        },
+        error: () => {
+            this.messageService.add({
+                severity: "error",
+                summary: "Regeneration Failed",
+                detail: `Unable to regenerate token "${token.name}". Please try again.`,
+            });
+        }
+    });
+}
 
   deleteToken(token: ApiToken) {
     if (confirm(`Are you sure you want to delete the token "${token.name}"?`)) {

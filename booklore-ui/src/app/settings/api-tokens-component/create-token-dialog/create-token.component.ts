@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MessageService } from "primeng/api";
 import { Button } from "primeng/button";
 import { Checkbox } from "primeng/checkbox";
-import { DynamicDialogRef } from "primeng/dynamicdialog";
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { InputText } from "primeng/inputtext";
 import { MultiSelectModule } from "primeng/multiselect";
-import { ApiTokenCreationDTO } from "../api-tokens.model";
+import { ApiToken, ApiTokenCreationDTO } from "../api-tokens.model";
 import { ApiTokensService } from "../api-tokens.service";
+import { ShowTokenDialogComponent } from '../show-token-dialog/show-token-dialog.component';
 
 @Component({
     selector: "app-create-token-dialog",
@@ -27,11 +28,11 @@ import { ApiTokensService } from "../api-tokens.service";
 })
 export class CreateTokenDialogComponent implements OnInit {
     tokenForm!: FormGroup;
-
     private readonly fb = inject(FormBuilder);
     private readonly messageService = inject(MessageService);
     private readonly ref = inject(DynamicDialogRef);
     private readonly tokenService = inject(ApiTokensService);
+    private readonly dialogService = inject(DialogService);
 
 
     expirationDates: {
@@ -66,13 +67,18 @@ export class CreateTokenDialogComponent implements OnInit {
         const tokenData: ApiTokenCreationDTO = {...this.tokenForm.value, permissions: null}
 
         this.tokenService.generateToken(tokenData).subscribe({
-            next: () => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Token Created',
-                    detail: 'The API token has been successfully created.'
-                });
+            next: (token: ApiToken) => {
+                // Close the Create Token dialog
                 this.ref.close(true);
+
+                // Open the Show Token dialog
+                this.dialogService.open(ShowTokenDialogComponent, {
+                    header: "Your New API Token",
+                    modal: true,
+                    closable: true,
+                    style: { position: "absolute", top: "15%" },
+                    data: { tokenValue: token.token },
+                });
             },
             error: (err) => {
                 this.messageService.add({
