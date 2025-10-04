@@ -65,7 +65,7 @@ public class ApiTokenController {
     public ResponseEntity<Void> deleteToken(
             @PathVariable Long id
     ) {
-        boolean success = tokenService.revokeToken(id);
+        boolean success = tokenService.deleteToken(id);
         return success ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 

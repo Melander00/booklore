@@ -3,19 +3,31 @@ import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { Button } from "primeng/button";
+import { Checkbox } from "primeng/checkbox";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { SelectModule } from "primeng/select";
 import { TableModule } from "primeng/table";
 import { Subject } from "rxjs";
 import { UserService } from "../user-management/user.service";
-import { ApiToken, ApiTokenUpdateDTO } from "./api-tokens.model";
+import {
+    ApiToken,
+    ApiTokenUpdateDTO,
+    GenerateApiTokenPermissionLabels
+} from "./api-tokens.model";
 import { ApiTokensService } from "./api-tokens.service";
 import { CreateTokenDialogComponent } from "./create-token-dialog/create-token.component";
 import { ShowTokenDialogComponent } from './show-token-dialog/show-token-dialog.component';
 
 @Component({
   selector: "app-api-tokens-component",
-  imports: [TableModule, Button, SelectModule, FormsModule, CommonModule],
+  imports: [
+    TableModule,
+    Button,
+    SelectModule,
+    FormsModule,
+    CommonModule,
+    Checkbox,
+  ],
   templateUrl: "./api-tokens.component.html",
   styleUrl: "./api-tokens.component.scss",
 })
@@ -44,6 +56,8 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
   ];
 
   selectedExpirationDate = this.expirationDates[0].value;
+
+  permissionLabels = GenerateApiTokenPermissionLabels();
 
   ngOnInit() {
     this.loadTokens();
@@ -81,7 +95,7 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
     const dto: ApiTokenUpdateDTO = {
       name: token.name,
       expiresInDays: this.selectedExpirationDate,
-      permissions: null,
+      permissions: token.permissions,
     };
     this.apiTokensService.updateToken(token.id, dto).subscribe({
       next: () => {
