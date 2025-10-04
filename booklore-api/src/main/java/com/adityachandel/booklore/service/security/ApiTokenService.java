@@ -46,7 +46,7 @@ public class ApiTokenService {
                 .user(userEntity)
                 .name(body.getName())
                 .token(generateSecureToken())
-                .permissions("{}") // todo: to json
+                .permissions(body.getPermissions())
                 .expiresAt(expiresAt)
                 .revoked(false)
                 .createdAt(Instant.now())
@@ -87,7 +87,7 @@ public class ApiTokenService {
                         : null;
 
         if(body.getName() != null) token.setName(body.getName());
-        if(body.getPermissions() != null) token.setPermissions("{}"); // todo: to json
+        if(body.getPermissions() != null) token.setPermissions(body.getPermissions());
         if(expiresAt != null) token.setExpiresAt(expiresAt);
         
         return tokenRepository.save(token);

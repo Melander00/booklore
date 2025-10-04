@@ -73,7 +73,7 @@ public class ApiTokenController {
         ApiTokenResponse.ApiTokenResponseBuilder builder = ApiTokenResponse.builder()
             .id(token.getId())
             .name(token.getName())
-            .permissions(null)
+            .permissions(token.getPermissions())
             .expiresAt(token.getExpiresAt())
             .createdAt(token.getCreatedAt())
             .revoked(token.isRevoked());

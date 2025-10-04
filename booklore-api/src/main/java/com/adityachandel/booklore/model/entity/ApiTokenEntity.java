@@ -3,7 +3,11 @@ package com.adityachandel.booklore.model.entity;
 import java.time.Instant;
 import java.util.Objects;
 
+import com.adityachandel.booklore.mapper.ApiTokenPermissionMapper;
+import com.adityachandel.booklore.model.ApiTokenPermissions;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -42,8 +46,9 @@ public class ApiTokenEntity {
     @Column(nullable = false, unique = true, length = 255)
     private String token; 
 
+    @Convert(converter = ApiTokenPermissionMapper.class)
     @Column(name = "permissions", columnDefinition = "json")
-    private String permissions;
+    private ApiTokenPermissions permissions;
 
     @Column(name = "expires_at")
     private Instant expiresAt;
@@ -67,5 +72,6 @@ public class ApiTokenEntity {
     public int hashCode() {
         return token != null ? token.hashCode() : 0;
     }
+
 }
 
