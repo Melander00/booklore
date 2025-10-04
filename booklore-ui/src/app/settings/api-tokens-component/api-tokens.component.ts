@@ -158,10 +158,11 @@ export class ApiTokensComponent implements OnInit, OnDestroy {
     if (confirm(`Are you sure you want to delete the token "${token.name}"?`)) {
       this.apiTokensService.deleteToken(token).subscribe({
         next: () => {
+          this.loadTokens();
           this.messageService.add({
             severity: "success",
             summary: "Success",
-            detail: "Token revoked successfully.",
+            detail: "Token deleted successfully.",
           });
         },
         error: () => {
