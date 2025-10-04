@@ -1,7 +1,7 @@
 <form [formGroup]="tokenForm" (ngSubmit)="createToken();" class="space-y-6 p-6">
 
     <div class="flex items-center gap-4">
-        <label class="w-40 text-right font-medium">Token Name:</label>
+        <span class="w-40 text-right font-medium">Token Name:</span>
         <input type="text" pInputText formControlName="name" placeholder="Enter a descriptive name..."
             class="w-full md:w-80" />
     </div>
@@ -13,9 +13,12 @@
 
     <div>
         <p class="text-right w-40 font-medium">Permissions:</p>
-        <div class="flex flex-col gap-2 pl-44">
+        <div class="flex flex-col gap-2 pl-44" formGroupName="permissions">
 
-            Todo
+            <div class="flex items-center gap-2" *ngFor="let perm of permissionLabels | keyvalue">
+                <p-checkbox [formControlName]="perm.key" [binary]="true"></p-checkbox>
+                <span>{{ perm.value }}</span>
+            </div>
 
         </div>
     </div>

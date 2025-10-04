@@ -1,13 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { Button } from "primeng/button";
 import { Checkbox } from "primeng/checkbox";
 import { DynamicDialogRef } from "primeng/dynamicdialog";
 import { InputText } from "primeng/inputtext";
 import { MultiSelectModule } from "primeng/multiselect";
-import { ApiTokenCreationDTO } from "../api-tokens.model";
+import { ApiTokenCreationDTO, ApiTokenPermissions, GenerateApiTokenPermissionLabels } from "../api-tokens.model";
 import { ApiTokensService } from "../api-tokens.service";
 
 @Component({
@@ -46,10 +46,21 @@ export class CreateTokenDialogComponent implements OnInit {
         {label: "365 Days", value: 365},
     ]
 
+    permissionLabels = GenerateApiTokenPermissionLabels();
+
     ngOnInit(): void {
+
+        const permissionFields = Object.keys(this.permissionLabels).reduce((acc, key) => {
+            acc[key as keyof ApiTokenPermissions] = new FormControl(false);
+            return acc;
+        }, {} as Record<keyof ApiTokenPermissions, FormControl<boolean|null>>)
+
         this.tokenForm = this.fb.group({
             name: ['', [Validators.required]],
-            expiresInDays: [this.expirationDates[0].value, [Validators.required]]
+            expiresInDays: [this.expirationDates[0].value, [Validators.required]],
+            permissions: this.fb.group({
+                ...permissionFields
+            })
         })
     }
 
@@ -63,7 +74,7 @@ export class CreateTokenDialogComponent implements OnInit {
             return;
         }
 
-        const tokenData: ApiTokenCreationDTO = {...this.tokenForm.value, permissions: null}
+        const tokenData: ApiTokenCreationDTO = {...this.tokenForm.value}
 
         this.tokenService.generateToken(tokenData).subscribe({
             next: () => {

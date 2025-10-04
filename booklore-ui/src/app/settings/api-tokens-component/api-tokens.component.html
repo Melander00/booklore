@@ -48,13 +48,13 @@
                                 </div>
                             </th>
                             <th style="width: 8%;" class="actions-header">
-                                <div class="header-content">
+                                <div class="text-center flex flex-row gap-2 items-center justify-center">
                                     <i class="pi pi-pencil"></i>
                                     <span>Edit</span>
                                 </div>
                             </th>
                             <th style="width: 7%;" class="actions-header">
-                                <div class="header-content">
+                                <div class="text-center flex flex-row gap-2 items-center justify-center">
                                     <i class="pi pi-trash"></i>
                                     <span>Delete</span>
                                 </div>
@@ -72,7 +72,14 @@
                                 }
                             </td>
 
-                            <td></td>
+                            <td>
+                                <div class="flex flex-row">    
+                                    <div *ngFor="let perm of permissionLabels | keyvalue" class="mx-5 flex flex-row gap-2 items-center">
+                                        <span>{{ perm.value }}</span>    
+                                        <p-checkbox [binary]="true" [(ngModel)]="token.permissions[perm.key]" [disabled]="!token.isEditing">  </p-checkbox>
+                                    </div>
+                                </div>
+                            </td>
 
                             <td>
                                 @if (token.isEditing) {
@@ -104,7 +111,7 @@
                                 </p-button>
                                 }
                                 @if (token.isEditing) {
-                                <div class="flex gap-1">
+                                <div class="flex gap-1 items-center justify-center">
                                     <p-button icon="pi pi-check" severity="success" size="small" [outlined]="true"
                                         [rounded]="true" (onClick)="saveToken(token)" pTooltip="Save changes">
                                     </p-button>
